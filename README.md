@@ -6,8 +6,8 @@ AI-driven browser automation skills for Claude Code. Write plain English scripts
 
 | Skill | Command | Description |
 |-------|---------|-------------|
-| [execute](./veriagent-execute/) | `/veriagent-execute` | Run a browser automation script |
-| [generate-test](./veriagent-generate-test/) | `/veriagent-generate-test` | Create a script via guided wizard |
+| [execute](./execute/) | `/execute` | Run a browser automation script |
+| [generate-test](./generate-test/) | `/generate-test` | Create a script via guided wizard |
 
 ## How It Works
 
@@ -41,7 +41,7 @@ Before installing VeriAgent skills, ensure you have:
 /plugin install veriagent@veriagent-plugins
 ```
 
-Skills are available as `/veriagent:veriagent-execute` and `/veriagent:veriagent-generate-test`.
+Skills are available as `/veriagent:execute` and `/veriagent:generate-test`.
 
 **Option B — Manual install (clone + symlink):**
 
@@ -52,11 +52,11 @@ cd /path/to/your/project
 git clone https://github.com/dotnetAL/veriagent.git .claude/skills/veriagent
 
 # Symlink each skill to the discovery level
-ln -s veriagent/skills/veriagent-execute .claude/skills/veriagent-execute
-ln -s veriagent/skills/veriagent-generate-test .claude/skills/veriagent-generate-test
+ln -s veriagent/skills/execute .claude/skills/execute
+ln -s veriagent/skills/generate-test .claude/skills/generate-test
 ```
 
-With manual install, skills are available as `/veriagent-execute` and `/veriagent-generate-test`.
+With manual install, skills are available as `/execute` and `/generate-test`.
 
 **Option C — Test locally during development:**
 
@@ -85,7 +85,7 @@ The skill will check for Playwright on first run and prompt you to install if it
 Open Claude Code in your project and type:
 
 ```
-/veriagent-execute
+/execute
 ```
 
 If the skill loads, you'll see Claude ask for a script path. That means it's installed correctly.
@@ -122,31 +122,31 @@ cd .claude/skills/veriagent && git pull
 ### Run a Script
 
 ```
-/veriagent-execute path/to/script.md
+/execute path/to/script.md
 ```
 
 ### Create a Script
 
 ```
-/veriagent-generate-test
+/generate-test
 ```
 
 ### Run from a GitHub Issue
 
 ```
-/veriagent-execute --issue 42
+/execute --issue 42
 ```
 
 ### Run in Headed Mode (see the browser)
 
 ```
-/veriagent-execute script.md --headed
+/execute script.md --headed
 ```
 
 ### Use a Template
 
 ```
-/veriagent-generate-test --from-template example-navigation
+/generate-test --from-template example-navigation
 ```
 
 ## Script Format
@@ -212,7 +212,7 @@ URL: {{prompt:url}}
 
 Use templates:
 ```
-/veriagent-generate-test --from-template login-flow
+/generate-test --from-template login-flow
 ```
 
 Templates are stored in `.veriagent/templates/` in your project. See [examples/templates/](./examples/templates/) for samples.
@@ -231,29 +231,29 @@ These skills are designed for Claude Code but work with any compatible AI coding
 ### Invocation
 
 ```
-Skill tool: name="veriagent-execute", args="script.md"
-Skill tool: name="veriagent-generate-test"
-Skill tool: name="veriagent-generate-test", args="--from-template signup-flow"
+Skill tool: name="execute", args="script.md"
+Skill tool: name="generate-test"
+Skill tool: name="generate-test", args="--from-template signup-flow"
 ```
 
 ### Programmatic Access
 
 ```bash
 # Validate a script
-node skills/veriagent-execute/parse.mjs script.md
+node skills/execute/parse.mjs script.md
 
 # Drive a browser directly
-node skills/veriagent-execute/driver.mjs launch
-node skills/veriagent-execute/driver.mjs goto <wsEndpoint> "https://example.com"
-node skills/veriagent-execute/driver.mjs screenshot <wsEndpoint> /tmp/page.png
-node skills/veriagent-execute/driver.mjs click <wsEndpoint> "button:has-text('Login')"
-node skills/veriagent-execute/driver.mjs close <wsEndpoint>
+node skills/execute/driver.mjs launch
+node skills/execute/driver.mjs goto <wsEndpoint> "https://example.com"
+node skills/execute/driver.mjs screenshot <wsEndpoint> /tmp/page.png
+node skills/execute/driver.mjs click <wsEndpoint> "button:has-text('Login')"
+node skills/execute/driver.mjs close <wsEndpoint>
 
 # List templates
-node skills/veriagent-generate-test/template-parser.mjs list .veriagent/templates
+node skills/generate-test/template-parser.mjs list .veriagent/templates
 
 # Resolve a template
-node skills/veriagent-generate-test/template-parser.mjs resolve template.md --answers '{"url":"https://example.com"}'
+node skills/generate-test/template-parser.mjs resolve template.md --answers '{"url":"https://example.com"}'
 ```
 
 ## Project Structure
@@ -264,13 +264,13 @@ veriagent/
 │   ├── plugin.json               # Plugin manifest
 │   └── marketplace.json          # Marketplace definition
 ├── skills/
-│   ├── veriagent-execute/        # Execute browser automation scripts
+│   ├── execute/        # Execute browser automation scripts
 │   │   ├── SKILL.md              # Execution protocol (13 steps)
 │   │   ├── parse.mjs             # Script parser (markdown → JSON)
 │   │   ├── driver.mjs            # Playwright CDP driver
 │   │   ├── README.md
 │   │   └── tests/
-│   └── veriagent-generate-test/  # Generate scripts via guided wizard
+│   └── generate-test/  # Generate scripts via guided wizard
 │       ├── SKILL.md              # Wizard protocol (11 steps)
 │       ├── template-parser.mjs
 │       ├── README.md

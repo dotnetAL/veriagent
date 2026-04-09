@@ -1,5 +1,5 @@
 ---
-name: veriagent-generate-test
+name: generate-test
 description: Generate a browser automation test script through a guided wizard. Use when asked to create a test, write a browser script, or generate a VeriAgent script.
 allowed-tools: Bash Read Write Glob Grep
 user-invocable: true
@@ -225,8 +225,8 @@ Ask the user:
    ```
    Write the script content to this file using the Write tool.
 
-2. Invoke `veriagent-execute` on it:
-   Use the Skill tool: `name: "veriagent-execute", args: "$TMPSCRIPT"`
+2. Invoke `execute` on it:
+   Use the Skill tool: `name: "execute", args: "$TMPSCRIPT"`
 
 3. Review results together with the user.
 
@@ -324,10 +324,10 @@ Ask the user:
 
 6. Confirm:
    > "Template saved to `.veriagent/templates/<name>.md`
-   > Reuse it with: `/veriagent-generate-test --from-template <name>`"
+   > Reuse it with: `/generate-test --from-template <name>`"
 
 **If no:** End the wizard.
-> "All done! You can run the script anytime with `/veriagent-execute <path>`"
+> "All done! You can run the script anytime with `/execute <path>`"
 
 ## From-Template Mode
 
@@ -335,9 +335,9 @@ When invoked with `--from-template <name>`:
 
 1. Locate the skill directory containing `template-parser.mjs`:
    ```bash
-   SKILL_DIR="$(dirname "$(find ~/.claude .claude -path '*/veriagent-generate-test/template-parser.mjs' -print -quit 2>/dev/null || find . -path '*/veriagent-generate-test/template-parser.mjs' -print -quit 2>/dev/null)")"
+   SKILL_DIR="$(dirname "$(find ~/.claude .claude -path '*/generate-test/template-parser.mjs' -print -quit 2>/dev/null || find . -path '*/generate-test/template-parser.mjs' -print -quit 2>/dev/null)")"
    ```
-   Verify: `test -f "$SKILL_DIR/template-parser.mjs"`. If not found, use Glob to search for `**/veriagent-generate-test/template-parser.mjs`.
+   Verify: `test -f "$SKILL_DIR/template-parser.mjs"`. If not found, use Glob to search for `**/generate-test/template-parser.mjs`.
 
 2. Search `.veriagent/templates/` for `<name>.md`. If not found, list available templates:
    ```bash

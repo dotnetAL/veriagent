@@ -1,14 +1,14 @@
-# veriagent-execute
+# execute
 
 Execute a browser automation script using Claude's vision. Claude drives Playwright directly — screenshots the page, decides what to click/type, executes, and reports results.
 
 ## Usage
 
 ```
-/veriagent-execute script.md
-/veriagent-execute script.md --headed
-/veriagent-execute --issue 42
-/veriagent-execute --issue 42 --repo owner/repo
+/execute script.md
+/execute script.md --headed
+/execute --issue 42
+/execute --issue 42 --repo owner/repo
 ```
 
 ### Arguments
@@ -122,8 +122,8 @@ All commands output JSON: `{ "ok": true }` or `{ "ok": false, "error": "..." }`.
 ### Invoking the Skill
 
 ```
-Skill tool: name="veriagent-execute", args="path/to/script.md"
-Skill tool: name="veriagent-execute", args="--issue 42 --repo owner/repo"
+Skill tool: name="execute", args="path/to/script.md"
+Skill tool: name="execute", args="--issue 42 --repo owner/repo"
 ```
 
 ### Using Components Directly
@@ -132,26 +132,26 @@ If you need more control than the skill provides, use the components directly vi
 
 ```bash
 # 1. Parse the script
-SCRIPT_JSON=$(node veriagent-execute/parse.mjs script.md)
+SCRIPT_JSON=$(node execute/parse.mjs script.md)
 
 # 2. Launch browser
-node veriagent-execute/driver.mjs launch &
+node execute/driver.mjs launch &
 sleep 3
 WS=$(node -e "process.stdout.write(JSON.parse(require('fs').readFileSync('/tmp/veriagent-browser.json','utf8')).wsEndpoint)")
 
 # 3. Navigate
-node veriagent-execute/driver.mjs goto "$WS" "https://example.com"
+node execute/driver.mjs goto "$WS" "https://example.com"
 
 # 4. Screenshot and decide actions
-node veriagent-execute/driver.mjs screenshot "$WS" /tmp/page.png
+node execute/driver.mjs screenshot "$WS" /tmp/page.png
 # Read /tmp/page.png with the Read tool (vision)
 # Decide what to click based on the screenshot
 
 # 5. Execute action
-node veriagent-execute/driver.mjs click "$WS" "button:has-text('Login')"
+node execute/driver.mjs click "$WS" "button:has-text('Login')"
 
 # 6. Cleanup
-node veriagent-execute/driver.mjs close "$WS"
+node execute/driver.mjs close "$WS"
 ```
 
 ### Selector Patterns

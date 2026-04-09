@@ -1,12 +1,12 @@
-# veriagent-generate-test
+# generate-test
 
 Guided wizard that walks you through creating a VeriAgent browser automation script. Supports codebase exploration, test-before-save workflow, and reusable templates.
 
 ## Usage
 
 ```
-/veriagent-generate-test
-/veriagent-generate-test --from-template signup-flow
+/generate-test
+/generate-test --from-template signup-flow
 ```
 
 ### Arguments
@@ -29,7 +29,7 @@ The wizard walks through each section one at a time:
 6. Generate      → Which outputs to produce (test report, docs, bug report)
 7. Data          → Variables and pick lists
 8. Review        → See the complete script, request changes
-9. Test          → Run with veriagent-execute, fix problems together
+9. Test          → Run with execute, fix problems together
 10. Save         → Save as .md file, GitHub issue, or both
 11. Template     → Optionally save as reusable template
 ```
@@ -54,7 +54,7 @@ You provide clear step-by-step instructions. Claude formats them into the script
 
 After generating the script (Step 8), the wizard asks if you want to test it:
 
-1. Claude invokes `veriagent-execute` on the generated script
+1. Claude invokes `execute` on the generated script
 2. You review results together
 3. If steps fail, Claude helps diagnose: reads screenshots, suggests fixes
 4. Edit and re-test until working
@@ -67,7 +67,7 @@ This ensures you save a working script, not a broken one.
 Two save destinations:
 
 - **File:** Saves as `.md` in your project (default: `scripts/` directory)
-- **GitHub Issue:** Creates an issue with the script as the body — ready for `veriagent-execute --issue`
+- **GitHub Issue:** Creates an issue with the script as the body — ready for `execute --issue`
 
 ## Templates
 
@@ -117,7 +117,7 @@ tier: {{prompt:tier}}
 ### Using Templates
 
 ```
-/veriagent-generate-test --from-template signup-flow
+/generate-test --from-template signup-flow
 ```
 
 Claude loads the template, asks each placeholder question, resolves the values, and drops you at the Review step (Step 8) so you can edit before testing.
@@ -159,8 +159,8 @@ node template-parser.mjs resolve .veriagent/templates/signup-flow.md \
 ### Invoking the Skill
 
 ```
-Skill tool: name="veriagent-generate-test"
-Skill tool: name="veriagent-generate-test", args="--from-template signup-flow"
+Skill tool: name="generate-test"
+Skill tool: name="generate-test", args="--from-template signup-flow"
 ```
 
 ### Creating Scripts Programmatically
@@ -169,7 +169,7 @@ If you need to generate scripts without the interactive wizard:
 
 1. **From a template:**
    ```bash
-   node veriagent-generate-test/template-parser.mjs resolve \
+   node generate-test/template-parser.mjs resolve \
      .veriagent/templates/signup-flow.md \
      --answers '{"url":"https://example.com","tier":"Pro"}' \
      > scripts/my-test.md
@@ -177,7 +177,7 @@ If you need to generate scripts without the interactive wizard:
 
 2. **Then execute:**
    ```
-   Skill tool: name="veriagent-execute", args="scripts/my-test.md"
+   Skill tool: name="execute", args="scripts/my-test.md"
    ```
 
 ### Template Discovery
@@ -186,7 +186,7 @@ To suggest templates based on what the user wants to test:
 
 ```bash
 # List all templates with metadata
-node veriagent-generate-test/template-parser.mjs list .veriagent/templates
+node generate-test/template-parser.mjs list .veriagent/templates
 ```
 
 Match the user's description against template `tags` and `description` fields to suggest relevant templates.

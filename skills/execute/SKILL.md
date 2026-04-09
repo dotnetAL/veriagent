@@ -1,5 +1,5 @@
 ---
-name: veriagent-execute
+name: execute
 description: Execute a browser automation script. Use when asked to test a website, run a browser flow, execute a UI test, or run a VeriAgent script.
 allowed-tools: Bash Read Write Glob
 user-invocable: true
@@ -28,7 +28,7 @@ If no arguments are provided, ask the user for a script file path or issue numbe
 Find the skill directory containing `parse.mjs` and `driver.mjs`:
 
 ```bash
-SKILL_DIR="$(dirname "$(find ~/.claude .claude -path '*/veriagent-execute/driver.mjs' -print -quit 2>/dev/null || find . -path '*/veriagent-execute/driver.mjs' -print -quit 2>/dev/null)")"
+SKILL_DIR="$(dirname "$(find ~/.claude .claude -path '*/execute/driver.mjs' -print -quit 2>/dev/null || find . -path '*/execute/driver.mjs' -print -quit 2>/dev/null)")"
 ```
 
 **Verify** the directory was found:
@@ -36,7 +36,7 @@ SKILL_DIR="$(dirname "$(find ~/.claude .claude -path '*/veriagent-execute/driver
 test -f "$SKILL_DIR/driver.mjs" && test -f "$SKILL_DIR/parse.mjs"
 ```
 
-If either file is missing, use the Glob tool to search for `**/veriagent-execute/driver.mjs` and extract the directory from the result.
+If either file is missing, use the Glob tool to search for `**/execute/driver.mjs` and extract the directory from the result.
 
 Store `SKILL_DIR` for all subsequent commands.
 
@@ -422,7 +422,7 @@ REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 
 2. If it doesn't exist, create it:
    ```bash
-   gh release create veriagent-assets --repo "$REPO" --title "VeriAgent Assets" --notes "Screenshot storage for veriagent-execute skill results. Do not delete." --latest=false
+   gh release create veriagent-assets --repo "$REPO" --title "VeriAgent Assets" --notes "Screenshot storage for execute skill results. Do not delete." --latest=false
    ```
 
 3. For each step screenshot, upload with a unique timestamp-based name:
