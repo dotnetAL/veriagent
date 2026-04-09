@@ -18,19 +18,102 @@ AI-driven browser automation skills for Claude Code. Write plain English scripts
 
 Claude **is** the AI — no separate LLM calls, no tokens consumed beyond the conversation itself.
 
-## Quick Start
+## Installation
 
-### Install
+### Prerequisites
+
+Before installing VeriAgent skills, ensure you have:
+
+1. **Claude Code** — available as [CLI](https://claude.ai/code), [desktop app](https://claude.ai/code) (Mac/Windows), [web app](https://claude.ai/code), or IDE extension ([VS Code](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code), [JetBrains](https://plugins.jetbrains.com/plugin/claude-code))
+2. **Node.js 22+** — required for the helper scripts (`parse.mjs`, `driver.mjs`)
+3. **Playwright** — browser automation engine (installed in step 3 below)
+4. **GitHub CLI** (optional) — only needed if you want `--issue` mode to fetch scripts from / post results to GitHub issues
+
+### Step 1: Clone the repo
+
+Clone VeriAgent into your project's `skills/` directory. Claude Code auto-discovers skills from this location.
 
 ```bash
-# Clone into your project's skills directory
+cd /path/to/your/project
 git clone https://github.com/dotnetAL/veriagent.git skills/veriagent
+```
 
-# Install Playwright (if not already installed)
+Your project should now look like:
+```
+your-project/
+├── skills/
+│   └── veriagent/
+│       ├── skills/
+│       │   ├── execute/
+│       │   └── generate-test/
+│       └── README.md
+├── src/
+└── ...
+```
+
+**Alternative — install globally** (available in all projects):
+```bash
+git clone https://github.com/dotnetAL/veriagent.git ~/.claude/skills/veriagent
+```
+
+**Alternative — add as git submodule** (track version in your repo):
+```bash
+git submodule add https://github.com/dotnetAL/veriagent.git skills/veriagent
+```
+
+### Step 2: Install Playwright
+
+VeriAgent uses Playwright to drive the browser. If you don't already have it:
+
+```bash
 npx playwright install chromium
 ```
 
-Claude Code discovers skills automatically from the `skills/` directory.
+This downloads a Chromium binary (~165 MB). Only Chromium is needed — you don't need Firefox or WebKit.
+
+The skill will check for Playwright on first run and prompt you to install if it's missing.
+
+### Step 3: Verify installation
+
+Open Claude Code in your project and type:
+
+```
+/veriagent:execute
+```
+
+If the skill loads, you'll see Claude ask for a script path. That means it's installed correctly.
+
+### Step 4: (Optional) Install GitHub CLI
+
+For `--issue` mode (fetch scripts from GitHub issues, post results back):
+
+```bash
+# macOS
+brew install gh
+
+# Linux
+sudo apt install gh
+
+# Windows
+winget install GitHub.cli
+
+# Then authenticate
+gh auth login
+```
+
+### Updating
+
+```bash
+cd skills/veriagent  # or wherever you cloned it
+git pull
+```
+
+If installed as a submodule:
+```bash
+git submodule update --remote skills/veriagent
+```
+
+## Quick Start
 
 ### Run a Script
 
@@ -48,6 +131,18 @@ Claude Code discovers skills automatically from the `skills/` directory.
 
 ```
 /veriagent:execute --issue 42
+```
+
+### Run in Headed Mode (see the browser)
+
+```
+/veriagent:execute script.md --headed
+```
+
+### Use a Template
+
+```
+/veriagent:generate-test --from-template example-navigation
 ```
 
 ## Script Format
@@ -117,12 +212,6 @@ Use templates:
 ```
 
 Templates are stored in `.veriagent/templates/` in your project. See [examples/templates/](./examples/templates/) for samples.
-
-## Prerequisites
-
-- [Claude Code](https://claude.ai/code) CLI, desktop app, or IDE extension
-- [Playwright](https://playwright.dev/) (`npx playwright install chromium`)
-- [GitHub CLI](https://cli.github.com/) (optional, for `--issue` mode)
 
 ## GitHub Integration
 
