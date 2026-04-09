@@ -448,10 +448,14 @@ REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
    ```
    This produces something like `20260409-143052-a1b2c3d4` — unique per run.
 
-4. For each step screenshot, upload with the run ID prefix:
+4. For each step screenshot, copy with the run ID prefix then upload:
    ```bash
-   gh release upload veriagent-assets "$WORKDIR/step-1-after.png#$RUN_ID-step-1.png" --repo "$REPO"
-   gh release upload veriagent-assets "$WORKDIR/step-2-after.png#$RUN_ID-step-2.png" --repo "$REPO"
+   # Copy with unique name (gh upload uses the filename as-is)
+   cp "$WORKDIR/step-1-after.png" "$WORKDIR/$RUN_ID-step-1.png"
+   gh release upload veriagent-assets "$WORKDIR/$RUN_ID-step-1.png" --repo "$REPO"
+   
+   cp "$WORKDIR/step-2-after.png" "$WORKDIR/$RUN_ID-step-2.png"
+   gh release upload veriagent-assets "$WORKDIR/$RUN_ID-step-2.png" --repo "$REPO"
    # ... repeat for each step screenshot that exists
    ```
 
@@ -460,7 +464,8 @@ REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 
    Also upload the final validation screenshot if it exists:
    ```bash
-   gh release upload veriagent-assets "$WORKDIR/final.png#$RUN_ID-final.png" --repo "$REPO"
+   cp "$WORKDIR/final.png" "$WORKDIR/$RUN_ID-final.png"
+   gh release upload veriagent-assets "$WORKDIR/$RUN_ID-final.png" --repo "$REPO"
    ```
 
 ### 11c. Post Results Comment
@@ -530,7 +535,8 @@ If recording was enabled, the `close` command returns `{ "ok": true, "videoPath"
 
 If source was `--issue` and a video was recorded, upload it to the release:
 ```bash
-gh release upload veriagent-assets "$VIDEO_PATH#$RUN_ID-recording.webm" --repo "$REPO"
+cp "$VIDEO_PATH" "$WORKDIR/$RUN_ID-recording.webm"
+gh release upload veriagent-assets "$WORKDIR/$RUN_ID-recording.webm" --repo "$REPO"
 ```
 
 Then clean up temp files:
