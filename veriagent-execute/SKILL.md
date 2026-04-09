@@ -28,20 +28,37 @@ If no arguments are provided, ask the user for a script file path or issue numbe
 Find the skill directory containing `parse.mjs` and `driver.mjs`:
 
 ```bash
-SKILL_DIR="$(dirname "$(find ~/.claude -path '*/veriagent-execute/driver.mjs' -print -quit 2>/dev/null || find . -path '*/veriagent-execute/driver.mjs' -print -quit 2>/dev/null)")"
+SKILL_DIR="$(dirname "$(find ~/.claude .claude -path '*/veriagent-execute/driver.mjs' -print -quit 2>/dev/null || find . -path '*/veriagent-execute/driver.mjs' -print -quit 2>/dev/null)")"
 ```
 
-If that fails, use Glob to search for `**/veriagent-execute/driver.mjs` and extract the directory.
+**Verify** the directory was found:
+```bash
+test -f "$SKILL_DIR/driver.mjs" && test -f "$SKILL_DIR/parse.mjs"
+```
+
+If either file is missing, use the Glob tool to search for `**/veriagent-execute/driver.mjs` and extract the directory from the result.
 
 Store `SKILL_DIR` for all subsequent commands.
 
 ## Step 3: Check Playwright
 
+Verify both the playwright package AND browser are installed:
+
 ```bash
-npx playwright --version 2>/dev/null
+node -e "require('playwright')" 2>/dev/null
 ```
 
-If this fails, tell the user: "Playwright is not installed. Shall I install it? (npx playwright install chromium)" and wait for confirmation before proceeding.
+If this fails, tell the user: "The `playwright` npm package is not installed. Shall I install it?" and run:
+```bash
+npm install -D playwright && npx playwright install chromium
+```
+
+If the package is installed but the browser is missing (driver.mjs launch will fail with "Executable not found"), run:
+```bash
+npx playwright install chromium
+```
+
+Wait for user confirmation before installing.
 
 ## Step 4: Create Working Directory
 
@@ -398,30 +415,30 @@ REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 
 ### 11b. Upload Screenshots to GitHub Release
 
-1. Check if the `browser-pilot-assets` release exists:
+1. Check if the `veriagent-assets` release exists:
    ```bash
-   gh release view browser-pilot-assets --repo "$REPO" 2>/dev/null
+   gh release view veriagent-assets --repo "$REPO" 2>/dev/null
    ```
 
 2. If it doesn't exist, create it:
    ```bash
-   gh release create browser-pilot-assets --repo "$REPO" --title "VeriAgent Assets" --notes "Screenshot storage for veriagent-execute skill results. Do not delete." --latest=false
+   gh release create veriagent-assets --repo "$REPO" --title "VeriAgent Assets" --notes "Screenshot storage for veriagent-execute skill results. Do not delete." --latest=false
    ```
 
 3. For each step screenshot, upload with a unique timestamp-based name:
    ```bash
    TIMESTAMP=$(date +%s)
-   gh release upload browser-pilot-assets "$WORKDIR/step-1-after.png#step-1-$TIMESTAMP.png" --repo "$REPO" --clobber
-   gh release upload browser-pilot-assets "$WORKDIR/step-2-after.png#step-2-$TIMESTAMP.png" --repo "$REPO" --clobber
+   gh release upload veriagent-assets "$WORKDIR/step-1-after.png#step-1-$TIMESTAMP.png" --repo "$REPO" --clobber
+   gh release upload veriagent-assets "$WORKDIR/step-2-after.png#step-2-$TIMESTAMP.png" --repo "$REPO" --clobber
    # ... repeat for each step screenshot that exists
    ```
 
    The download URL for each screenshot will be:
-   `https://github.com/<repo>/releases/download/browser-pilot-assets/step-N-<timestamp>.png`
+   `https://github.com/<repo>/releases/download/veriagent-assets/step-N-<timestamp>.png`
 
    Also upload the final validation screenshot if it exists:
    ```bash
-   gh release upload browser-pilot-assets "$WORKDIR/final.png#final-$TIMESTAMP.png" --repo "$REPO" --clobber
+   gh release upload veriagent-assets "$WORKDIR/final.png#final-$TIMESTAMP.png" --repo "$REPO" --clobber
    ```
 
 ### 11c. Post Results Comment
@@ -451,13 +468,13 @@ The comment body should follow this format:
 <details>
 <summary>Step 1: Click "Get Started"</summary>
 
-![step-1](https://github.com/<repo>/releases/download/browser-pilot-assets/step-1-<timestamp>.png)
+![step-1](https://github.com/<repo>/releases/download/veriagent-assets/step-1-<timestamp>.png)
 </details>
 
 <details>
 <summary>Step 2: Enter email</summary>
 
-![step-2](https://github.com/<repo>/releases/download/browser-pilot-assets/step-2-<timestamp>.png)
+![step-2](https://github.com/<repo>/releases/download/veriagent-assets/step-2-<timestamp>.png)
 </details>
 
 ### Validation

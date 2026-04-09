@@ -82,7 +82,7 @@ Wraps Playwright commands via Chrome DevTools Protocol. Each command connects to
 
 ```bash
 # Launch browser (runs in background)
-node driver.mjs launch --headless --viewport 1280x720
+node driver.mjs launch --viewport 1280x720
 
 # Navigate
 node driver.mjs goto <wsEndpoint> "https://example.com"
@@ -135,7 +135,7 @@ If you need more control than the skill provides, use the components directly vi
 SCRIPT_JSON=$(node veriagent-execute/parse.mjs script.md)
 
 # 2. Launch browser
-node veriagent-execute/driver.mjs launch --headless &
+node veriagent-execute/driver.mjs launch &
 sleep 3
 WS=$(node -e "process.stdout.write(JSON.parse(require('fs').readFileSync('/tmp/veriagent-browser.json','utf8')).wsEndpoint)")
 

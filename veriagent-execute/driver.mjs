@@ -7,7 +7,7 @@ import { spawn } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const INFO_PATH = '/tmp/veriagent-browser.json';
+const INFO_PATH = join(tmpdir(), 'veriagent-browser.json');
 const CONNECT_TIMEOUT = 10_000;
 const ACTION_TIMEOUT = 30_000;
 
@@ -15,20 +15,27 @@ const ACTION_TIMEOUT = 30_000;
  * Dynamically import playwright, trying several resolution strategies.
  */
 async function loadPlaywright() {
-  // Try standard import first (works if hoisted or in node_modules)
+  // Try standard import (works if playwright is in node_modules)
   try {
     return await import('playwright');
   } catch { /* fall through */ }
 
-  // Try the known monorepo location
-  const __dirname = dirname(fileURLToPath(import.meta.url));
-  const monorepoPath = resolve(__dirname, '..', '..', '..', 'packages', 'core', 'node_modules', 'playwright', 'index.mjs');
+  // Try playwright-core as fallback
   try {
-    return await import(monorepoPath);
+    return await import('playwright-core');
+  } catch { /* fall through */ }
+
+  // Try using createRequire from the project root for monorepo/hoisted setups
+  try {
+    const { createRequire } = await import('node:module');
+    const require = createRequire(resolve(process.cwd(), 'package.json'));
+    const pw = require('playwright');
+    return pw;
   } catch { /* fall through */ }
 
   throw new Error(
-    'Could not find playwright. Install it with: pnpm add -D playwright'
+    'Could not find playwright. Install it with:\n' +
+    '  npm install -D playwright && npx playwright install chromium'
   );
 }
 
@@ -83,6 +90,19 @@ async function cmdLaunch(flags) {
     : { width: 1280, height: 720 };
 
   const execPath = chromium.executablePath();
+  if (!execPath) {
+    throw new Error('Chromium executable not found. Run: npx playwright install chromium');
+  }
+  // Verify the executable actually exists
+  try {
+    const { accessSync } = await import('node:fs');
+    accessSync(execPath);
+  } catch {
+    throw new Error(
+      `Chromium executable not found at ${execPath}\n` +
+      'Run: npx playwright install chromium'
+    );
+  }
   const userDataDir = mkdtempSync(join(tmpdir(), 'veriagent-chrome-'));
 
   const launchArgs = [

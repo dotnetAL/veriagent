@@ -69,13 +69,17 @@ ln -s veriagent/veriagent-generate-test .claude/skills/veriagent-generate-test
 
 ### Step 2: Install Playwright
 
-VeriAgent uses Playwright to drive the browser. If you don't already have it:
+VeriAgent uses Playwright to drive the browser. You need both the npm package and the browser binary:
 
 ```bash
+# Install the playwright package
+npm install -D playwright
+
+# Download the Chromium browser binary (~165 MB)
 npx playwright install chromium
 ```
 
-This downloads a Chromium binary (~165 MB). Only Chromium is needed — you don't need Firefox or WebKit.
+Only Chromium is needed — you don't need Firefox or WebKit.
 
 The skill will check for Playwright on first run and prompt you to install if it's missing.
 
@@ -241,7 +245,7 @@ Skill tool: name="veriagent-generate-test", args="--from-template signup-flow"
 node veriagent-execute/parse.mjs script.md
 
 # Drive a browser directly
-node veriagent-execute/driver.mjs launch --headless
+node veriagent-execute/driver.mjs launch
 node veriagent-execute/driver.mjs goto <wsEndpoint> "https://example.com"
 node veriagent-execute/driver.mjs screenshot <wsEndpoint> /tmp/page.png
 node veriagent-execute/driver.mjs click <wsEndpoint> "button:has-text('Login')"

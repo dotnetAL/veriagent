@@ -184,9 +184,9 @@ Viewport: [width]x[height]
 [expected outcome, or omit section if empty]
 
 ## Generate
-Test Report: [yes/no]
-Documentation: [yes/no]
-Bug Report: [yes/no]
+- [x] Test report
+- [ ] Step-by-step documentation
+- [ ] Bug report
 
 ## Data
 [key: value pairs, or omit section if empty]
@@ -335,8 +335,9 @@ When invoked with `--from-template <name>`:
 
 1. Locate the skill directory containing `template-parser.mjs`:
    ```bash
-   SKILL_DIR="$(dirname "$(find ~/.claude -path '*/veriagent-generate-test/template-parser.mjs' -print -quit 2>/dev/null || find . -path '*/veriagent-generate-test/template-parser.mjs' -print -quit 2>/dev/null)")"
+   SKILL_DIR="$(dirname "$(find ~/.claude .claude -path '*/veriagent-generate-test/template-parser.mjs' -print -quit 2>/dev/null || find . -path '*/veriagent-generate-test/template-parser.mjs' -print -quit 2>/dev/null)")"
    ```
+   Verify: `test -f "$SKILL_DIR/template-parser.mjs"`. If not found, use Glob to search for `**/veriagent-generate-test/template-parser.mjs`.
 
 2. Search `.veriagent/templates/` for `<name>.md`. If not found, list available templates:
    ```bash
