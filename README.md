@@ -6,8 +6,8 @@ AI-driven browser automation skills for Claude Code. Write plain English scripts
 
 | Skill | Command | Description |
 |-------|---------|-------------|
-| [execute](./skills/execute/) | `/veriagent:execute` | Run a browser automation script |
-| [generate-test](./skills/generate-test/) | `/veriagent:generate-test` | Create a script via guided wizard |
+| [execute](./execute/) | `/veriagent:execute` | Run a browser automation script |
+| [generate-test](./generate-test/) | `/veriagent:generate-test` | Create a script via guided wizard |
 
 ## How It Works
 
@@ -35,30 +35,27 @@ Clone VeriAgent into your project's `skills/` directory. Claude Code auto-discov
 
 ```bash
 cd /path/to/your/project
-git clone https://github.com/dotnetAL/veriagent.git skills/veriagent
+git clone https://github.com/dotnetAL/veriagent.git .claude/skills/veriagent
 ```
 
 Your project should now look like:
 ```
 your-project/
-├── skills/
-│   └── veriagent/
-│       ├── skills/
-│       │   ├── execute/
-│       │   └── generate-test/
-│       └── README.md
+├── .claude/
+│   └── skills/
+│       └── veriagent/
+│           ├── execute/        ← SKILL.md discovered here
+│           ├── generate-test/  ← SKILL.md discovered here
+│           └── README.md
 ├── src/
 └── ...
 ```
 
-**Alternative — install globally** (available in all projects):
-```bash
-git clone https://github.com/dotnetAL/veriagent.git ~/.claude/skills/veriagent
-```
+Claude Code discovers skills from `.claude/skills/` automatically.
 
 **Alternative — add as git submodule** (track version in your repo):
 ```bash
-git submodule add https://github.com/dotnetAL/veriagent.git skills/veriagent
+git submodule add https://github.com/dotnetAL/veriagent.git .claude/skills/veriagent
 ```
 
 ### Step 2: Install Playwright
@@ -104,13 +101,13 @@ gh auth login
 ### Updating
 
 ```bash
-cd skills/veriagent  # or wherever you cloned it
+cd .claude/skills/veriagent
 git pull
 ```
 
 If installed as a submodule:
 ```bash
-git submodule update --remote skills/veriagent
+git submodule update --remote .claude/skills/veriagent
 ```
 
 ## Quick Start
@@ -236,38 +233,37 @@ Skill tool: name="veriagent:generate-test", args="--from-template signup-flow"
 
 ```bash
 # Validate a script
-node skills/execute/parse.mjs script.md
+node execute/parse.mjs script.md
 
 # Drive a browser directly
-node skills/execute/driver.mjs launch --headless
-node skills/execute/driver.mjs goto <wsEndpoint> "https://example.com"
-node skills/execute/driver.mjs screenshot <wsEndpoint> /tmp/page.png
-node skills/execute/driver.mjs click <wsEndpoint> "button:has-text('Login')"
-node skills/execute/driver.mjs close <wsEndpoint>
+node execute/driver.mjs launch --headless
+node execute/driver.mjs goto <wsEndpoint> "https://example.com"
+node execute/driver.mjs screenshot <wsEndpoint> /tmp/page.png
+node execute/driver.mjs click <wsEndpoint> "button:has-text('Login')"
+node execute/driver.mjs close <wsEndpoint>
 
 # List templates
-node skills/generate-test/template-parser.mjs list .veriagent/templates
+node generate-test/template-parser.mjs list .veriagent/templates
 
 # Resolve a template
-node skills/generate-test/template-parser.mjs resolve template.md --answers '{"url":"https://example.com"}'
+node generate-test/template-parser.mjs resolve template.md --answers '{"url":"https://example.com"}'
 ```
 
 ## Project Structure
 
 ```
 veriagent/
-├── skills/
-│   ├── execute/              # veriagent:execute skill
-│   │   ├── SKILL.md          # Execution protocol (13 steps)
-│   │   ├── parse.mjs         # Script parser (markdown → JSON)
-│   │   ├── driver.mjs        # Playwright CDP driver
-│   │   ├── README.md
-│   │   └── tests/
-│   └── generate-test/        # veriagent:generate-test skill
-│       ├── SKILL.md          # Wizard protocol (11 steps)
-│       ├── template-parser.mjs
-│       ├── README.md
-│       └── tests/
+├── execute/                  # veriagent:execute skill
+│   ├── SKILL.md              # Execution protocol (13 steps)
+│   ├── parse.mjs             # Script parser (markdown → JSON)
+│   ├── driver.mjs            # Playwright CDP driver
+│   ├── README.md
+│   └── tests/
+├── generate-test/            # veriagent:generate-test skill
+│   ├── SKILL.md              # Wizard protocol (11 steps)
+│   ├── template-parser.mjs
+│   ├── README.md
+│   └── tests/
 ├── examples/
 │   └── templates/            # Example templates
 ├── README.md

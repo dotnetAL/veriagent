@@ -335,7 +335,7 @@ When invoked with `--from-template <name>`:
 
 1. Locate the skill directory containing `template-parser.mjs`:
    ```bash
-   SKILL_DIR="$(dirname "$(find ~/.claude -path '*/skills/generate-test/template-parser.mjs' -print -quit 2>/dev/null || find . -path '*/skills/generate-test/template-parser.mjs' -print -quit 2>/dev/null)")"
+   SKILL_DIR="$(dirname "$(find ~/.claude -path '*/generate-test/template-parser.mjs' -print -quit 2>/dev/null || find . -path '*/generate-test/template-parser.mjs' -print -quit 2>/dev/null)")"
    ```
 
 2. Search `.veriagent/templates/` for `<name>.md`. If not found, list available templates:

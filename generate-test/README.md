@@ -169,7 +169,7 @@ If you need to generate scripts without the interactive wizard:
 
 1. **From a template:**
    ```bash
-   node skills/generate-test/template-parser.mjs resolve \
+   node generate-test/template-parser.mjs resolve \
      .veriagent/templates/signup-flow.md \
      --answers '{"url":"https://example.com","tier":"Pro"}' \
      > scripts/my-test.md
@@ -186,7 +186,7 @@ To suggest templates based on what the user wants to test:
 
 ```bash
 # List all templates with metadata
-node skills/generate-test/template-parser.mjs list .veriagent/templates
+node generate-test/template-parser.mjs list .veriagent/templates
 ```
 
 Match the user's description against template `tags` and `description` fields to suggest relevant templates.
