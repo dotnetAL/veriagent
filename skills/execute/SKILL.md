@@ -20,6 +20,7 @@ Examine the arguments passed to this skill:
   gh repo view --json nameWithOwner -q .nameWithOwner
   ```
 - **`--headed`**: Run the browser in headed (visible) mode. Default is headless.
+- **`--record`**: Record a video of the entire test run. Saved as `.webm` file.
 
 If no arguments are provided, ask the user for a script file path or issue number.
 
@@ -29,7 +30,11 @@ If `--headed` was not explicitly passed, ask the user:
 > 1. **Headed** — visible browser window (useful for watching/debugging)
 > 2. **Headless** — runs in background (faster, default)
 
-Use their choice for the launch step.
+Also ask:
+
+> "Would you like to record a video of the test run?"
+
+Use their choices for the launch step.
 
 ## Step 2: Locate Skill Helpers
 
@@ -112,10 +117,10 @@ If parsing fails, report the error to the user and stop.
 ## Step 6: Launch Browser
 
 ```bash
-node "$SKILL_DIR/driver.mjs" launch [--headed] [--viewport WIDTHxHEIGHT]
+node "$SKILL_DIR/driver.mjs" launch [--headed] [--viewport WIDTHxHEIGHT] [--record WORKDIR]
 ```
 
-Pass `--headed` if the user requested it. Pass `--viewport` from the parsed script's `target.viewport` (e.g., `--viewport 1280x720`).
+Pass `--headed` if the user requested it. Pass `--viewport` from the parsed script's `target.viewport` (e.g., `--viewport 1280x720`). Pass `--record $WORKDIR` if the user wants a video recording of the test run.
 
 **Important:** Run this command with the Bash tool's `run_in_background` option, OR capture its first line of stdout which contains the JSON with `wsEndpoint`. The launch process stays alive to track the browser.
 
@@ -493,9 +498,12 @@ The comment body should follow this format:
 **Expected:** <expected outcome from script>
 **Actual:** <what you observed>
 **Verdict:** PASS / FAIL
+
+### Recording
+[Download test recording](https://github.com/<repo>/releases/download/veriagent-assets/recording-<timestamp>.webm)
 ```
 
-Omit the Validation section if the script had no `expected` field. Omit screenshot details sections for steps where no screenshot was captured.
+Omit the Validation section if the script had no `expected` field. Omit screenshot details sections for steps where no screenshot was captured. Omit the Recording section if `--record` was not used.
 
 ### 11d. Error Handling for GitHub Integration
 
@@ -509,8 +517,19 @@ Omit the Validation section if the script had no `expected` field. Omit screensh
 Always clean up, even if steps failed:
 
 ```bash
-node "$SKILL_DIR/driver.mjs" close "$WS"
+CLOSE_RESULT=$(node "$SKILL_DIR/driver.mjs" close "$WS")
 kill $LAUNCH_PID 2>/dev/null
+```
+
+If recording was enabled, the `close` command returns `{ "ok": true, "videoPath": "/path/to/recording.webm" }`. Save the video path for the report.
+
+If source was `--issue` and a video was recorded, upload it to the release:
+```bash
+gh release upload veriagent-assets "$VIDEO_PATH#recording-<timestamp>.webm" --repo "$REPO" --clobber
+```
+
+Then clean up temp files:
+```bash
 rm -rf "$WORKDIR"
 ```
 

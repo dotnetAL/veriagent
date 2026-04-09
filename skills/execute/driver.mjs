@@ -150,27 +150,46 @@ async function cmdLaunch(flags) {
     });
   });
 
-  // Open a default page with the desired viewport
+  // Open a default page with the desired viewport and optionally start video recording
+  const recordDir = flags.record ? (flags.record === true ? join(tmpdir(), 'veriagent-recording') : flags.record) : null;
+
   try {
     const browser = await chromium.connectOverCDP(cdpEndpoint);
-    const context = browser.contexts()[0];
-    if (context) {
-      // Set viewport on the default page
-      const pages = context.pages();
+    const defaultContext = browser.contexts()[0];
+
+    if (recordDir) {
+      // Close the default context and create a new one with video recording
+      const { mkdirSync } = await import('node:fs');
+      mkdirSync(recordDir, { recursive: true });
+
+      if (defaultContext) {
+        await defaultContext.close();
+      }
+
+      const context = await browser.newContext({
+        viewport,
+        recordVideo: { dir: recordDir, size: viewport },
+      });
+      await context.newPage();
+    } else if (defaultContext) {
+      // Just set viewport on existing page
+      const pages = defaultContext.pages();
       if (pages.length > 0) {
         await pages[0].setViewportSize(viewport);
       }
     }
+
     // Disconnect client, browser stays alive
     await browser.close();
   } catch { /* best effort */ }
 
-  // Write info file so close can find the PID
+  // Write info file so close can find the PID and recording path
   writeFileSync(INFO_PATH, JSON.stringify({
     wsEndpoint: cdpEndpoint,
     pid: child.pid,
     viewport,
     userDataDir,
+    recordDir,
   }));
 
   // Output the wsEndpoint for the caller
@@ -303,12 +322,32 @@ async function cmdInfo(wsEndpoint) {
 }
 
 async function cmdClose(wsEndpoint) {
-  // Try to read PID from info file
+  // Try to read info from file
   let pid = null;
+  let recordDir = null;
   try {
     const info = JSON.parse(readFileSync(INFO_PATH, 'utf-8'));
     pid = info.pid;
+    recordDir = info.recordDir;
   } catch { /* ignore */ }
+
+  // If recording, close the context properly to finalize the video
+  let videoPath = null;
+  if (recordDir) {
+    try {
+      const { chromium } = await loadPlaywright();
+      const browser = await chromium.connectOverCDP(wsEndpoint, { timeout: 5000 });
+      const contexts = browser.contexts();
+      if (contexts.length > 0) {
+        const pages = contexts[0].pages();
+        if (pages.length > 0 && pages[0].video()) {
+          videoPath = await pages[0].video().path();
+        }
+        await contexts[0].close();  // This finalizes the video file
+      }
+      await browser.close();
+    } catch { /* best effort */ }
+  }
 
   // Kill the Chromium process directly
   if (pid) {
@@ -318,7 +357,18 @@ async function cmdClose(wsEndpoint) {
   // Clean up info file
   try { unlinkSync(INFO_PATH); } catch { /* ignore */ }
 
-  output({ ok: true });
+  // Find video files in recordDir
+  if (recordDir && !videoPath) {
+    try {
+      const { readdirSync } = await import('node:fs');
+      const files = readdirSync(recordDir).filter(f => f.endsWith('.webm'));
+      if (files.length > 0) {
+        videoPath = join(recordDir, files[0]);
+      }
+    } catch { /* ignore */ }
+  }
+
+  output({ ok: true, videoPath });
 }
 
 // ─── Main ──────────────────────────────────────────────────────────────

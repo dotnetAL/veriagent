@@ -19,6 +19,7 @@ Execute a browser automation script using Claude's vision. Claude drives Playwri
 | `--issue <number>` | Fetch script from a GitHub issue body |
 | `--repo <owner/repo>` | GitHub repo (auto-detected if not provided) |
 | `--headed` | Run browser in visible mode (default: headless) |
+| `--record` | Record a video of the entire test run (.webm) |
 
 ## What It Does
 
