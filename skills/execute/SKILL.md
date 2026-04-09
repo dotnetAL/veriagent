@@ -23,6 +23,14 @@ Examine the arguments passed to this skill:
 
 If no arguments are provided, ask the user for a script file path or issue number.
 
+If `--headed` was not explicitly passed, ask the user:
+
+> "Would you like to see the browser while it runs?"
+> 1. **Headed** — visible browser window (useful for watching/debugging)
+> 2. **Headless** — runs in background (faster, default)
+
+Use their choice for the launch step.
+
 ## Step 2: Locate Skill Helpers
 
 Find the skill directory containing `parse.mjs` and `driver.mjs`:
