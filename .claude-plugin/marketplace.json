@@ -1,0 +1,21 @@
+{
+  "name": "veriagent-plugins",
+  "owner": {
+    "name": "Alex Leslie",
+    "email": "alex@veristay.com"
+  },
+  "plugins": [
+    {
+      "name": "veriagent",
+      "source": "./",
+      "description": "AI-driven browser automation skills for Claude Code. Write plain English scripts, Claude executes them using its own vision.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Alex Leslie"
+      },
+      "homepage": "https://github.com/dotnetAL/veriagent",
+      "repository": "https://github.com/dotnetAL/veriagent",
+      "license": "MIT"
+    }
+  ]
+}

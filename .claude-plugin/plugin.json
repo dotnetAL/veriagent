@@ -1,0 +1,13 @@
+{
+  "name": "veriagent",
+  "description": "AI-driven browser automation skills for Claude Code. Write plain English scripts, Claude executes them using its own vision.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Alex Leslie",
+    "email": "alex@veristay.com"
+  },
+  "homepage": "https://github.com/dotnetAL/veriagent",
+  "repository": "https://github.com/dotnetAL/veriagent",
+  "license": "MIT",
+  "keywords": ["testing", "browser-automation", "playwright", "ai", "e2e-testing"]
+}
