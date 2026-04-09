@@ -6,21 +6,9 @@
   },
   "plugins": [
     {
-      "name": "execute",
-      "source": "./skills/execute",
-      "description": "Execute browser automation scripts using Claude's vision. Write plain English steps, Claude drives Playwright directly.",
-      "version": "1.0.0",
-      "author": {
-        "name": "Alex Leslie"
-      },
-      "homepage": "https://github.com/dotnetAL/veriagent",
-      "repository": "https://github.com/dotnetAL/veriagent",
-      "license": "MIT"
-    },
-    {
-      "name": "generate-test",
-      "source": "./skills/generate-test",
-      "description": "Guided wizard to create browser automation scripts with codebase exploration, test-before-save, and reusable templates.",
+      "name": "veriagent",
+      "source": "./",
+      "description": "AI-driven browser automation skills for Claude Code. Write plain English scripts, Claude executes them using its own vision.",
       "version": "1.0.0",
       "author": {
         "name": "Alex Leslie"
