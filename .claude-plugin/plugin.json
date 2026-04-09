@@ -1,7 +1,7 @@
 {
   "name": "veriagent",
   "description": "AI-driven browser automation skills for Claude Code. Write plain English scripts, Claude executes them using its own vision.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "Alex Leslie",
     "email": "alex@veristay.com"
