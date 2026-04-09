@@ -40,7 +40,7 @@ Execute a browser automation script using Claude's vision. Claude drives Playwri
 
 When the script source is `--issue`:
 - Results are automatically posted as a comment on the issue
-- Screenshots are uploaded to a `browser-pilot-assets` GitHub release (created automatically)
+- Screenshots are uploaded to a `veriagent-assets` GitHub release (created automatically)
 - Screenshots render inline in the issue comment
 - No opt-out — if it came from an issue, results go back
 
@@ -134,10 +134,10 @@ If you need more control than the skill provides, use the components directly vi
 # 1. Parse the script
 SCRIPT_JSON=$(node execute/parse.mjs script.md)
 
-# 2. Launch browser
-node execute/driver.mjs launch &
+# 2. Launch browser (capture wsEndpoint from stdout)
+node execute/driver.mjs launch > /tmp/veriagent-launch.json &
 sleep 3
-WS=$(node -e "process.stdout.write(JSON.parse(require('fs').readFileSync('/tmp/veriagent-browser.json','utf8')).wsEndpoint)")
+WS=$(node -e "process.stdout.write(JSON.parse(require('fs').readFileSync('/tmp/veriagent-launch.json','utf8')).wsEndpoint)")
 
 # 3. Navigate
 node execute/driver.mjs goto "$WS" "https://example.com"

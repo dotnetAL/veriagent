@@ -221,7 +221,7 @@ Templates are stored in `.veriagent/templates/` in your project. See [examples/t
 
 When a script is sourced from a GitHub issue (`--issue`):
 - Results are posted as a comment on the issue
-- Screenshots are uploaded to a `browser-pilot-assets` release
+- Screenshots are uploaded to a `veriagent-assets` release
 - Screenshots render inline in the issue comment
 
 ## For AI Agents

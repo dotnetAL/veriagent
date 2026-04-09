@@ -104,20 +104,24 @@ If parsing fails, report the error to the user and stop.
 ## Step 6: Launch Browser
 
 ```bash
-node "$SKILL_DIR/driver.mjs" launch [--headed] [--viewport WIDTHxHEIGHT] &
-LAUNCH_PID=$!
-sleep 3
+node "$SKILL_DIR/driver.mjs" launch [--headed] [--viewport WIDTHxHEIGHT]
 ```
 
 Pass `--headed` if the user requested it. Pass `--viewport` from the parsed script's `target.viewport` (e.g., `--viewport 1280x720`).
 
-The launch command runs in the background (it stays alive to track the Chromium process). After waiting for startup, read the websocket endpoint:
+**Important:** Run this command with the Bash tool's `run_in_background` option, OR capture its first line of stdout which contains the JSON with `wsEndpoint`. The launch process stays alive to track the browser.
 
-```bash
-cat /tmp/veriagent-browser.json
+The launch command outputs JSON to stdout:
+```json
+{"wsEndpoint":"ws://127.0.0.1:XXXXX/devtools/browser/..."}
 ```
 
-Extract the `wsEndpoint` value from this JSON file. Store it as `WS` for all subsequent driver commands.
+Extract the `wsEndpoint` value from this output. Store it as `WS` for all subsequent driver commands.
+
+If stdout capture is difficult with backgrounding, read the info file the driver writes:
+```bash
+cat "$(node -e "process.stdout.write(require('os').tmpdir())")/veriagent-browser.json"
+```
 
 ## Step 7: Navigate to Target URL
 

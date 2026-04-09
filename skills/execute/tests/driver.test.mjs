@@ -8,7 +8,9 @@ import { setTimeout as sleep } from 'node:timers/promises';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DRIVER = resolve(__dirname, '..', 'driver.mjs');
-const INFO_PATH = '/tmp/veriagent-browser.json';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+const INFO_PATH = join(tmpdir(), 'veriagent-browser.json');
 
 /**
  * Run a driver command synchronously and return parsed JSON output.
@@ -115,7 +117,7 @@ describe('driver.mjs', () => {
   });
 
   it('screenshot creates a file', () => {
-    const screenshotPath = '/tmp/veriagent-test-screenshot.png';
+    const screenshotPath = join(tmpdir(), 'veriagent-test-screenshot.png');
     try { unlinkSync(screenshotPath); } catch { /* ignore */ }
 
     const result = run('screenshot', wsEndpoint, screenshotPath);

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { writeFileSync, readFileSync, unlinkSync, mkdtempSync } from 'node:fs';
+import { writeFileSync, readFileSync, unlinkSync, mkdtempSync, accessSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
@@ -95,7 +95,7 @@ async function cmdLaunch(flags) {
   }
   // Verify the executable actually exists
   try {
-    const { accessSync } = await import('node:fs');
+
     accessSync(execPath);
   } catch {
     throw new Error(
