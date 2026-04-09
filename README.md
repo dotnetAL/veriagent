@@ -37,11 +37,12 @@ Before installing VeriAgent skills, ensure you have:
 # Add the marketplace
 /plugin marketplace add dotnetAL/veriagent
 
-# Install the plugin
-/plugin install veriagent@veriagent-plugins
+# Install the skills
+/plugin install execute@veriagent-plugins
+/plugin install generate-test@veriagent-plugins
 ```
 
-Skills are available as `/veriagent:execute` and `/veriagent:generate-test`.
+Skills are available as `/execute` and `/generate-test`.
 
 **Option B — Manual install (clone + symlink):**
 
