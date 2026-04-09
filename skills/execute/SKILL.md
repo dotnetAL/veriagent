@@ -442,20 +442,25 @@ REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
    gh release create veriagent-assets --repo "$REPO" --title "VeriAgent Assets" --notes "Screenshot storage for execute skill results. Do not delete." --latest=false
    ```
 
-3. For each step screenshot, upload with a unique timestamp-based name:
+3. Generate a unique run ID for this execution:
    ```bash
-   TIMESTAMP=$(date +%s)
-   gh release upload veriagent-assets "$WORKDIR/step-1-after.png#step-1-$TIMESTAMP.png" --repo "$REPO" --clobber
-   gh release upload veriagent-assets "$WORKDIR/step-2-after.png#step-2-$TIMESTAMP.png" --repo "$REPO" --clobber
+   RUN_ID=$(date +%Y%m%d-%H%M%S)-$(head -c 4 /dev/urandom | xxd -p)
+   ```
+   This produces something like `20260409-143052-a1b2c3d4` — unique per run.
+
+4. For each step screenshot, upload with the run ID prefix:
+   ```bash
+   gh release upload veriagent-assets "$WORKDIR/step-1-after.png#$RUN_ID-step-1.png" --repo "$REPO"
+   gh release upload veriagent-assets "$WORKDIR/step-2-after.png#$RUN_ID-step-2.png" --repo "$REPO"
    # ... repeat for each step screenshot that exists
    ```
 
    The download URL for each screenshot will be:
-   `https://github.com/<repo>/releases/download/veriagent-assets/step-N-<timestamp>.png`
+   `https://github.com/<repo>/releases/download/veriagent-assets/<RUN_ID>-step-N.png`
 
    Also upload the final validation screenshot if it exists:
    ```bash
-   gh release upload veriagent-assets "$WORKDIR/final.png#final-$TIMESTAMP.png" --repo "$REPO" --clobber
+   gh release upload veriagent-assets "$WORKDIR/final.png#$RUN_ID-final.png" --repo "$REPO"
    ```
 
 ### 11c. Post Results Comment
@@ -485,13 +490,13 @@ The comment body should follow this format:
 <details>
 <summary>Step 1: Click "Get Started"</summary>
 
-![step-1](https://github.com/<repo>/releases/download/veriagent-assets/step-1-<timestamp>.png)
+![step-1](https://github.com/<repo>/releases/download/veriagent-assets/<RUN_ID>-step-1.png)
 </details>
 
 <details>
 <summary>Step 2: Enter email</summary>
 
-![step-2](https://github.com/<repo>/releases/download/veriagent-assets/step-2-<timestamp>.png)
+![step-2](https://github.com/<repo>/releases/download/veriagent-assets/<RUN_ID>-step-2.png)
 </details>
 
 ### Validation
@@ -500,7 +505,7 @@ The comment body should follow this format:
 **Verdict:** PASS / FAIL
 
 ### Recording
-[Download test recording](https://github.com/<repo>/releases/download/veriagent-assets/recording-<timestamp>.webm)
+[Download test recording](https://github.com/<repo>/releases/download/veriagent-assets/<RUN_ID>-recording.webm)
 ```
 
 Omit the Validation section if the script had no `expected` field. Omit screenshot details sections for steps where no screenshot was captured. Omit the Recording section if `--record` was not used.
@@ -525,7 +530,7 @@ If recording was enabled, the `close` command returns `{ "ok": true, "videoPath"
 
 If source was `--issue` and a video was recorded, upload it to the release:
 ```bash
-gh release upload veriagent-assets "$VIDEO_PATH#recording-<timestamp>.webm" --repo "$REPO" --clobber
+gh release upload veriagent-assets "$VIDEO_PATH#$RUN_ID-recording.webm" --repo "$REPO"
 ```
 
 Then clean up temp files:
