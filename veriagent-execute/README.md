@@ -1,14 +1,14 @@
-# veriagent:execute
+# veriagent-execute
 
 Execute a browser automation script using Claude's vision. Claude drives Playwright directly — screenshots the page, decides what to click/type, executes, and reports results.
 
 ## Usage
 
 ```
-/veriagent:execute script.md
-/veriagent:execute script.md --headed
-/veriagent:execute --issue 42
-/veriagent:execute --issue 42 --repo owner/repo
+/veriagent-execute script.md
+/veriagent-execute script.md --headed
+/veriagent-execute --issue 42
+/veriagent-execute --issue 42 --repo owner/repo
 ```
 
 ### Arguments
@@ -122,8 +122,8 @@ All commands output JSON: `{ "ok": true }` or `{ "ok": false, "error": "..." }`.
 ### Invoking the Skill
 
 ```
-Skill tool: name="veriagent:execute", args="path/to/script.md"
-Skill tool: name="veriagent:execute", args="--issue 42 --repo owner/repo"
+Skill tool: name="veriagent-execute", args="path/to/script.md"
+Skill tool: name="veriagent-execute", args="--issue 42 --repo owner/repo"
 ```
 
 ### Using Components Directly

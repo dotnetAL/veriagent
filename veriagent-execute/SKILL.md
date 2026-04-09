@@ -1,5 +1,5 @@
 ---
-name: veriagent:execute
+name: veriagent-execute
 description: Execute a browser automation script. Use when asked to test a website, run a browser flow, execute a UI test, or run a VeriAgent script.
 allowed-tools: Bash Read Write Glob
 user-invocable: true
@@ -405,7 +405,7 @@ REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 
 2. If it doesn't exist, create it:
    ```bash
-   gh release create browser-pilot-assets --repo "$REPO" --title "VeriAgent Assets" --notes "Screenshot storage for veriagent:execute skill results. Do not delete." --latest=false
+   gh release create browser-pilot-assets --repo "$REPO" --title "VeriAgent Assets" --notes "Screenshot storage for veriagent-execute skill results. Do not delete." --latest=false
    ```
 
 3. For each step screenshot, upload with a unique timestamp-based name:

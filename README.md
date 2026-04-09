@@ -6,8 +6,8 @@ AI-driven browser automation skills for Claude Code. Write plain English scripts
 
 | Skill | Command | Description |
 |-------|---------|-------------|
-| [execute](./veriagent-execute/) | `/veriagent:execute` | Run a browser automation script |
-| [generate-test](./veriagent-generate-test/) | `/veriagent:generate-test` | Create a script via guided wizard |
+| [execute](./veriagent-execute/) | `/veriagent-execute` | Run a browser automation script |
+| [generate-test](./veriagent-generate-test/) | `/veriagent-generate-test` | Create a script via guided wizard |
 
 ## How It Works
 
@@ -84,7 +84,7 @@ The skill will check for Playwright on first run and prompt you to install if it
 Open Claude Code in your project and type:
 
 ```
-/veriagent:execute
+/veriagent-execute
 ```
 
 If the skill loads, you'll see Claude ask for a script path. That means it's installed correctly.
@@ -120,31 +120,31 @@ Symlinks continue to work — no need to re-create them after updating.
 ### Run a Script
 
 ```
-/veriagent:execute path/to/script.md
+/veriagent-execute path/to/script.md
 ```
 
 ### Create a Script
 
 ```
-/veriagent:generate-test
+/veriagent-generate-test
 ```
 
 ### Run from a GitHub Issue
 
 ```
-/veriagent:execute --issue 42
+/veriagent-execute --issue 42
 ```
 
 ### Run in Headed Mode (see the browser)
 
 ```
-/veriagent:execute script.md --headed
+/veriagent-execute script.md --headed
 ```
 
 ### Use a Template
 
 ```
-/veriagent:generate-test --from-template example-navigation
+/veriagent-generate-test --from-template example-navigation
 ```
 
 ## Script Format
@@ -210,7 +210,7 @@ URL: {{prompt:url}}
 
 Use templates:
 ```
-/veriagent:generate-test --from-template login-flow
+/veriagent-generate-test --from-template login-flow
 ```
 
 Templates are stored in `.veriagent/templates/` in your project. See [examples/templates/](./examples/templates/) for samples.
@@ -229,9 +229,9 @@ These skills are designed for Claude Code but work with any compatible AI coding
 ### Invocation
 
 ```
-Skill tool: name="veriagent:execute", args="script.md"
-Skill tool: name="veriagent:generate-test"
-Skill tool: name="veriagent:generate-test", args="--from-template signup-flow"
+Skill tool: name="veriagent-execute", args="script.md"
+Skill tool: name="veriagent-generate-test"
+Skill tool: name="veriagent-generate-test", args="--from-template signup-flow"
 ```
 
 ### Programmatic Access
@@ -258,13 +258,13 @@ node veriagent-generate-test/template-parser.mjs resolve template.md --answers '
 
 ```
 veriagent/
-├── veriagent-execute/                  # veriagent:execute skill
+├── veriagent-execute/                  # veriagent-execute skill
 │   ├── SKILL.md              # Execution protocol (13 steps)
 │   ├── parse.mjs             # Script parser (markdown → JSON)
 │   ├── driver.mjs            # Playwright CDP driver
 │   ├── README.md
 │   └── tests/
-├── veriagent-generate-test/            # veriagent:generate-test skill
+├── veriagent-generate-test/            # veriagent-generate-test skill
 │   ├── SKILL.md              # Wizard protocol (11 steps)
 │   ├── template-parser.mjs
 │   ├── README.md

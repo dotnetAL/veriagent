@@ -1,5 +1,5 @@
 ---
-name: veriagent:generate-test
+name: veriagent-generate-test
 description: Generate a browser automation test script through a guided wizard. Use when asked to create a test, write a browser script, or generate a VeriAgent script.
 allowed-tools: Bash Read Write Glob Grep
 user-invocable: true
@@ -225,8 +225,8 @@ Ask the user:
    ```
    Write the script content to this file using the Write tool.
 
-2. Invoke `veriagent:execute` on it:
-   Use the Skill tool: `name: "veriagent:execute", args: "$TMPSCRIPT"`
+2. Invoke `veriagent-execute` on it:
+   Use the Skill tool: `name: "veriagent-execute", args: "$TMPSCRIPT"`
 
 3. Review results together with the user.
 
@@ -324,10 +324,10 @@ Ask the user:
 
 6. Confirm:
    > "Template saved to `.veriagent/templates/<name>.md`
-   > Reuse it with: `/veriagent:generate-test --from-template <name>`"
+   > Reuse it with: `/veriagent-generate-test --from-template <name>`"
 
 **If no:** End the wizard.
-> "All done! You can run the script anytime with `/veriagent:execute <path>`"
+> "All done! You can run the script anytime with `/veriagent-execute <path>`"
 
 ## From-Template Mode
 
