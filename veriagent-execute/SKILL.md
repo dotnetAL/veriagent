@@ -28,10 +28,10 @@ If no arguments are provided, ask the user for a script file path or issue numbe
 Find the skill directory containing `parse.mjs` and `driver.mjs`:
 
 ```bash
-SKILL_DIR="$(dirname "$(find ~/.claude -path '*/execute/driver.mjs' -print -quit 2>/dev/null || find . -path '*/execute/driver.mjs' -print -quit 2>/dev/null)")"
+SKILL_DIR="$(dirname "$(find ~/.claude -path '*/veriagent-execute/driver.mjs' -print -quit 2>/dev/null || find . -path '*/veriagent-execute/driver.mjs' -print -quit 2>/dev/null)")"
 ```
 
-If that fails, use Glob to search for `**/execute/driver.mjs` and extract the directory.
+If that fails, use Glob to search for `**/veriagent-execute/driver.mjs` and extract the directory.
 
 Store `SKILL_DIR` for all subsequent commands.
 

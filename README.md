@@ -6,8 +6,8 @@ AI-driven browser automation skills for Claude Code. Write plain English scripts
 
 | Skill | Command | Description |
 |-------|---------|-------------|
-| [execute](./execute/) | `/veriagent:execute` | Run a browser automation script |
-| [generate-test](./generate-test/) | `/veriagent:generate-test` | Create a script via guided wizard |
+| [execute](./veriagent-execute/) | `/veriagent:execute` | Run a browser automation script |
+| [generate-test](./veriagent-generate-test/) | `/veriagent:generate-test` | Create a script via guided wizard |
 
 ## How It Works
 
@@ -33,9 +33,17 @@ Before installing VeriAgent skills, ensure you have:
 
 Clone VeriAgent into your project's `skills/` directory. Claude Code auto-discovers skills from this location.
 
+Claude Code discovers skills at `.claude/skills/<name>/SKILL.md`. Clone the repo, then symlink or copy the skill directories into place:
+
 ```bash
 cd /path/to/your/project
+
+# Clone the repo
 git clone https://github.com/dotnetAL/veriagent.git .claude/skills/veriagent
+
+# Symlink each skill to the discovery level
+ln -s veriagent/veriagent-execute .claude/skills/veriagent-execute
+ln -s veriagent/veriagent-generate-test .claude/skills/veriagent-generate-test
 ```
 
 Your project should now look like:
@@ -43,19 +51,20 @@ Your project should now look like:
 your-project/
 ├── .claude/
 │   └── skills/
-│       └── veriagent/
-│           ├── execute/        ← SKILL.md discovered here
-│           ├── generate-test/  ← SKILL.md discovered here
-│           └── README.md
+│       ├── veriagent/                    ← cloned repo
+│       ├── veriagent-execute/            ← symlink → veriagent/veriagent-execute/
+│       │   └── SKILL.md                  ← discovered by Claude Code
+│       └── veriagent-generate-test/      ← symlink → veriagent/veriagent-generate-test/
+│           └── SKILL.md                  ← discovered by Claude Code
 ├── src/
 └── ...
 ```
 
-Claude Code discovers skills from `.claude/skills/` automatically.
-
-**Alternative — add as git submodule** (track version in your repo):
+**Alternative — add as git submodule:**
 ```bash
 git submodule add https://github.com/dotnetAL/veriagent.git .claude/skills/veriagent
+ln -s veriagent/veriagent-execute .claude/skills/veriagent-execute
+ln -s veriagent/veriagent-generate-test .claude/skills/veriagent-generate-test
 ```
 
 ### Step 2: Install Playwright
@@ -101,14 +110,10 @@ gh auth login
 ### Updating
 
 ```bash
-cd .claude/skills/veriagent
-git pull
+cd .claude/skills/veriagent && git pull
 ```
 
-If installed as a submodule:
-```bash
-git submodule update --remote .claude/skills/veriagent
-```
+Symlinks continue to work — no need to re-create them after updating.
 
 ## Quick Start
 
@@ -233,33 +238,33 @@ Skill tool: name="veriagent:generate-test", args="--from-template signup-flow"
 
 ```bash
 # Validate a script
-node execute/parse.mjs script.md
+node veriagent-execute/parse.mjs script.md
 
 # Drive a browser directly
-node execute/driver.mjs launch --headless
-node execute/driver.mjs goto <wsEndpoint> "https://example.com"
-node execute/driver.mjs screenshot <wsEndpoint> /tmp/page.png
-node execute/driver.mjs click <wsEndpoint> "button:has-text('Login')"
-node execute/driver.mjs close <wsEndpoint>
+node veriagent-execute/driver.mjs launch --headless
+node veriagent-execute/driver.mjs goto <wsEndpoint> "https://example.com"
+node veriagent-execute/driver.mjs screenshot <wsEndpoint> /tmp/page.png
+node veriagent-execute/driver.mjs click <wsEndpoint> "button:has-text('Login')"
+node veriagent-execute/driver.mjs close <wsEndpoint>
 
 # List templates
-node generate-test/template-parser.mjs list .veriagent/templates
+node veriagent-generate-test/template-parser.mjs list .veriagent/templates
 
 # Resolve a template
-node generate-test/template-parser.mjs resolve template.md --answers '{"url":"https://example.com"}'
+node veriagent-generate-test/template-parser.mjs resolve template.md --answers '{"url":"https://example.com"}'
 ```
 
 ## Project Structure
 
 ```
 veriagent/
-├── execute/                  # veriagent:execute skill
+├── veriagent-execute/                  # veriagent:execute skill
 │   ├── SKILL.md              # Execution protocol (13 steps)
 │   ├── parse.mjs             # Script parser (markdown → JSON)
 │   ├── driver.mjs            # Playwright CDP driver
 │   ├── README.md
 │   └── tests/
-├── generate-test/            # veriagent:generate-test skill
+├── veriagent-generate-test/            # veriagent:generate-test skill
 │   ├── SKILL.md              # Wizard protocol (11 steps)
 │   ├── template-parser.mjs
 │   ├── README.md

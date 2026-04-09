@@ -132,26 +132,26 @@ If you need more control than the skill provides, use the components directly vi
 
 ```bash
 # 1. Parse the script
-SCRIPT_JSON=$(node execute/parse.mjs script.md)
+SCRIPT_JSON=$(node veriagent-execute/parse.mjs script.md)
 
 # 2. Launch browser
-node execute/driver.mjs launch --headless &
+node veriagent-execute/driver.mjs launch --headless &
 sleep 3
 WS=$(node -e "process.stdout.write(JSON.parse(require('fs').readFileSync('/tmp/veriagent-browser.json','utf8')).wsEndpoint)")
 
 # 3. Navigate
-node execute/driver.mjs goto "$WS" "https://example.com"
+node veriagent-execute/driver.mjs goto "$WS" "https://example.com"
 
 # 4. Screenshot and decide actions
-node execute/driver.mjs screenshot "$WS" /tmp/page.png
+node veriagent-execute/driver.mjs screenshot "$WS" /tmp/page.png
 # Read /tmp/page.png with the Read tool (vision)
 # Decide what to click based on the screenshot
 
 # 5. Execute action
-node execute/driver.mjs click "$WS" "button:has-text('Login')"
+node veriagent-execute/driver.mjs click "$WS" "button:has-text('Login')"
 
 # 6. Cleanup
-node execute/driver.mjs close "$WS"
+node veriagent-execute/driver.mjs close "$WS"
 ```
 
 ### Selector Patterns
